@@ -7,7 +7,8 @@ import { JwtStrategy } from 'src/settings/jwt.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { secretKey } from 'src/settings';
-
+import { ProfileController } from './profile.controller';
+import {AuthController} from './auth.controller';
 @Module({
   imports:[TypeOrmModule.forFeature([UserEntity]),
   PassportModule,
@@ -15,7 +16,7 @@ import { secretKey } from 'src/settings';
     secret: secretKey,
     signOptions: { expiresIn: '1d' },
   }),],
-  controllers: [UserController],
+  controllers: [UserController,ProfileController,AuthController],
   providers: [UserService,JwtStrategy]
 })
 export class UserModule {}

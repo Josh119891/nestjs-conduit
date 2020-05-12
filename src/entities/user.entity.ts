@@ -7,17 +7,17 @@ import { AbstractEntity } from "./abstract.entity";
 @Entity('User')
 export class UserEntity extends AbstractEntity{
 
-  @Column({ unique: true })
+  @Column({type:"text", unique: true })
   @IsEmail()
   email: string;
 
-  @Column({ unique: true })
+  @Column({type:"text", unique: true })
   username: string;
 
-  @Column({ default: '' })
+  @Column({ default: '',type:"text" })
   bio: string;
 
-  @Column({ default: '' })
+  @Column({ default: '',type:"text"  })
   image: string ;
 
   @Column()
