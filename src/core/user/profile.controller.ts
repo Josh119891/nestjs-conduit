@@ -7,7 +7,8 @@ export class ProfileController {
   constructor(private readonly userService:UserService) {} 
 
   @Get('/:username')
-  async getProfile(@Param('username') username:string){
+  @UseGuards(JWTGuard)
+  async getProfile(@User() currentUser,@Param('username') username:string){
     const profile =await this.userService.findByUsername(username);
     Object.assign(profile, {following:false});
     return {profile};

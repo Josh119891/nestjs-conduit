@@ -1,10 +1,11 @@
-import { Column, BeforeInsert, Entity } from "typeorm";
+import { Column, BeforeInsert, Entity, JoinTable, ManyToMany } from "typeorm";
 import * as bcrypt from 'bcryptjs';
 import { Exclude, classToPlain } from 'class-transformer';
 import { IsEmail } from 'class-validator';
 import { AbstractEntity } from "./abstract.entity";
+import { userInfo } from "os";
 
-@Entity('User')
+@Entity('user')
 export class UserEntity extends AbstractEntity{
 
   @Column({type:"text", unique: true })
@@ -19,6 +20,14 @@ export class UserEntity extends AbstractEntity{
 
   @Column({ default: '',type:"text"  })
   image: string ;
+
+  @ManyToMany(type=>UserEntity,user=>user.followee)
+  @JoinTable()
+  follower:UserEntity[];
+
+  @ManyToMany(type=>UserEntity,user=>user.follower)
+  @JoinTable()
+  followee:UserEntity[];
 
   @Column()
   @Exclude()

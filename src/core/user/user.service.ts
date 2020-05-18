@@ -10,14 +10,18 @@ export class UserService {
   constructor(@InjectRepository(UserEntity) private userRepo: Repository<UserEntity>,
   private readonly jwtService: JwtService,){}
    
-  async findByUsername(username: string):Promise<AuthResponse>{
+  async findByUsername(username: string):Promise<UserEntity>{
     const user = await this.userRepo.findOne({username});
-    return this.authResposne(user);
+    if(!user){
+      throw new UnauthorizedException();
+    }
+    return user;
   }
 
   async update(username:string,updateDTO:UpdateDTO):Promise<AuthResponse>{
     await this.userRepo.update({username},updateDTO);
-    return await this.findByUsername(username);
+    const user= await this.findByUsername(username);
+    return this.authResposne(user);
   }
 
 
@@ -31,18 +35,18 @@ export class UserService {
     return this.authResposne(user) ;
 }
 
-async login({password,email}:LoginDTO):Promise<AuthResponse>{
-  const user = await this.userRepo.findOne({email});
-  if(user && await user.comparePassword(password)){
-    return this.authResposne(user)
-  } 
-  throw new UnauthorizedException('Invalid credentials');
-}
-
+  async login({password,email}:LoginDTO):Promise<AuthResponse>{
+    const user = await this.userRepo.findOne({email});
+    if(user && await user.comparePassword(password)){
+      return this.authResposne(user)
+    } 
+    throw new UnauthorizedException('Invalid credentials');
+  }
 
   authResposne(user: any):AuthResponse{
     const token = this.jwtService.sign({username:user.username});
     return { ...user.toJSON(), token };
   }
+
   
 }
