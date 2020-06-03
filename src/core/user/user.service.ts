@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from 'src/entities/user.entity';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
-import { AuthResponse, UpdateDTO, RegisterDTO, LoginDTO } from 'src/models';
+import { AuthResponse, UpdateDTO, RegisterDTO, LoginDTO, Profile } from 'src/models';
 
 @Injectable()
 export class UserService {
@@ -17,7 +17,24 @@ export class UserService {
     }
     return user;
   }
+  async followUser(currentUser:UserEntity, username:string):Promise<Profile>{
+    const user = await this.userRepo.findOne({where:{username},relations:['follower']});
+      user.follower.push(currentUser);
+      await user.save();
+    return user.toProfile(currentUser);
+  }
 
+  async unfollowUser(currentUser:UserEntity, username:string):Promise<Profile>{
+    const user = await this.userRepo.findOne({where:{username},relations:['follower']});
+    user.follower = user.follower.filter(follower => follower!==currentUser);
+    await user.save();
+    return user.toProfile(currentUser);
+  }
+
+  async getProfile(currentUser:UserEntity, username:string):Promise<Profile>{
+    const user = await this.userRepo.findOne({where:{username},relations:['follower']});
+    return user.toProfile(currentUser);
+  }
   async update(username:string,updateDTO:UpdateDTO):Promise<AuthResponse>{
     await this.userRepo.update({username},updateDTO);
     const user= await this.findByUsername(username);
@@ -42,6 +59,8 @@ export class UserService {
     } 
     throw new UnauthorizedException('Invalid credentials');
   }
+
+
 
   authResposne(user: any):AuthResponse{
     const token = this.jwtService.sign({username:user.username});

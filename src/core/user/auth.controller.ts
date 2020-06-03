@@ -5,7 +5,6 @@ import { RegisterDTO, LoginDTO } from 'src/models/user.model';
 @Controller('users')
 export class AuthController {
   constructor(private readonly userService:UserService) {} 
-
   @Post('register')
   async register(@Body('user') registerDTO:RegisterDTO){
     const user= await this.userService.register(registerDTO);

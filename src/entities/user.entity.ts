@@ -3,7 +3,6 @@ import * as bcrypt from 'bcryptjs';
 import { Exclude, classToPlain } from 'class-transformer';
 import { IsEmail } from 'class-validator';
 import { AbstractEntity } from "./abstract.entity";
-import { userInfo } from "os";
 
 @Entity('user')
 export class UserEntity extends AbstractEntity{
@@ -46,4 +45,11 @@ export class UserEntity extends AbstractEntity{
     return classToPlain(this);
   }
 
+  toProfile(user:UserEntity){
+    const following = this.follower.includes(user);
+    const profile:any = this.toJSON();
+    console.log(profile)
+    delete profile.follower;
+    return {...profile,following};
+  }
 }
