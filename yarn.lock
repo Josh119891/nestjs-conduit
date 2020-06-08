@@ -821,6 +821,11 @@
     "@types/express-serve-static-core" "*"
     "@types/mime" "*"
 
+"@types/slug@^0.9.1":
+  version "0.9.1"
+  resolved "https://registry.npm.taobao.org/@types/slug/download/@types/slug-0.9.1.tgz#16dbf8b77d73e0a09ce51a96400878f33806ab32"
+  integrity sha1-Ftv4t31z4KCc5RqWQAh48zgGqzI=
+
 "@types/source-list-map@*":
   version "0.1.2"
   resolved "https://registry.npm.taobao.org/@types/source-list-map/download/@types/source-list-map-0.1.2.tgz?cache=0&sync_timestamp=1588202412220&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fsource-list-map%2Fdownload%2F%40types%2Fsource-list-map-0.1.2.tgz#0078836063ffaf17412349bba364087e0ac02ec9"
@@ -6360,6 +6365,11 @@ sliced@1.0.1:
   version "1.0.1"
   resolved "https://registry.npm.taobao.org/sliced/download/sliced-1.0.1.tgz#0b3a662b5d04c3177b1926bea82b03f837a2ef41"
   integrity sha1-CzpmK10Ewxd7GSa+qCsD+Dei70E=
+
+slug@^3.3.0:
+  version "3.3.0"
+  resolved "https://registry.npm.taobao.org/slug/download/slug-3.3.0.tgz#79841ac7e366d64ead9eb31276f5558d6d51b633"
+  integrity sha1-eYQax+Nm1k6tnrMSdvVVjW1RtjM=
 
 snapdragon-node@^2.0.1:
   version "2.1.1"
