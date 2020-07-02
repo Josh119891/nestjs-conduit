@@ -1,10 +1,11 @@
 
 
-import { Entity, Column, BeforeInsert, ManyToOne, JoinColumn, ManyToMany, RelationCount }from "typeorm";
+import { Entity, Column, BeforeInsert, ManyToOne, JoinColumn, ManyToMany, RelationCount, JoinTable, OneToMany }from "typeorm";
 import { AbstractEntity } from "./abstract.entity";
 import * as slugify from "slug"
 import { UserEntity } from "./user.entity";
 import { classToPlain } from "class-transformer";
+import { CommentEntity } from "./comment.entity";
 @Entity("article")
 export class ArticleEntity extends AbstractEntity{
   @Column()
@@ -26,7 +27,7 @@ export class ArticleEntity extends AbstractEntity{
     user=>user.favorites,
     {eager:true}
   )
-  @JoinColumn()
+  @JoinTable()
   favoritedBy: UserEntity[];
 
   @RelationCount((article: ArticleEntity)=>article.favoritedBy)
@@ -34,7 +35,10 @@ export class ArticleEntity extends AbstractEntity{
 
   @Column('simple-array')
   tagList:string[];
-   
+
+  @OneToMany(type=>CommentEntity,comment=>comment.article)
+  comments:CommentEntity[]
+  
   @BeforeInsert()
   generateSlug(){
     this.slug = slugify(this.title,{lower:true})+ '-'+(Math.random() * Math.pow(36,6)|0).toString(36)
@@ -45,10 +49,10 @@ export class ArticleEntity extends AbstractEntity{
   }
   toArticle(user:UserEntity){
     let favorited=null;
-    if(user){
-      favorited = this.favoritedBy.includes(user);
+    if(user&& this.favoritedBy){
+      favorited = this.favoritedBy.map(user=> user.id).includes(user.id);
     }
-    const article:any = this.toJSON;
+    const article:any = this.toJSON();
     delete article.favoritedBy;
     return  {...article,favorited}
   }
